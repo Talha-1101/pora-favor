@@ -1,0 +1,828 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pore Favor — Homepage Redesign Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#032531; --navy-2:#0b3442; --sun:#F4D52B; --sun-soft:#FBF0A6;
+  --cream:#F6F1EA; --sand:#E7E0D7; --ink:#0f1d22; --mute:#5b6b70; --line:rgba(3,37,49,.12);
+  --r:22px; --ease:cubic-bezier(.2,.8,.2,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"DM Sans",system-ui,sans-serif;background:var(--cream);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+.wrap{width:min(1240px,100% - 40px);margin-inline:auto}
+.display{font-family:Anton,Impact,sans-serif;text-transform:uppercase;letter-spacing:.01em;line-height:.92;font-weight:400}
+.serif{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;text-transform:none;letter-spacing:0}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}
+.stars{color:var(--sun);letter-spacing:2px;filter:drop-shadow(0 1px 0 rgba(0,0,0,.15))}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:18px 28px;border-radius:999px;font-weight:700;font-size:15px;transition:transform .3s var(--ease),box-shadow .3s,background .3s}
+.btn-primary{background:var(--navy);color:#fff;box-shadow:0 10px 30px -10px rgba(3,37,49,.6)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 40px -12px rgba(3,37,49,.7)}
+.btn-primary .arrow{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--sun);color:var(--navy);transition:transform .3s var(--ease)}
+.btn-primary:hover .arrow{transform:translateX(4px) rotate(-45deg)}
+.btn-ghost{border:1.5px solid var(--navy)}
+.btn-ghost:hover{background:var(--navy);color:#fff}
+.btn-sun{background:var(--sun);color:var(--navy)}
+.btn-sun:hover{transform:translateY(-2px)}
+section{position:relative}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(40px);transition:opacity 1s var(--ease),transform 1s var(--ease)}
+.rv.in{opacity:1;transform:none}
+.rv.d1{transition-delay:.1s}.rv.d2{transition-delay:.2s}.rv.d3{transition-delay:.3s}
+
+/* announcement */
+.announce{background:var(--navy);color:#fff;font-size:13px;font-weight:500;letter-spacing:.04em;height:38px;overflow:hidden;position:relative}
+.announce div{position:absolute;inset:0;display:grid;place-items:center;transition:transform .6s var(--ease),opacity .6s;opacity:0;transform:translateY(100%)}
+.announce div.on{opacity:1;transform:none}
+.announce div.out{opacity:0;transform:translateY(-100%)}
+.announce b{color:var(--sun)}
+
+/* header */
+header{position:sticky;top:0;z-index:50;transition:background .3s,box-shadow .3s,backdrop-filter .3s}
+header.scrolled{background:rgba(246,241,234,.82);backdrop-filter:blur(14px);box-shadow:0 1px 0 var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:76px}
+.nav .logo img{height:26px;width:auto;mix-blend-mode:multiply}
+.nav ul{display:flex;gap:34px;list-style:none;font-weight:500;font-size:15px}
+.nav ul a{position:relative}
+.nav ul a::after{content:"";position:absolute;left:0;bottom:-4px;height:2px;width:100%;background:var(--navy);transform:scaleX(0);transform-origin:right;transition:transform .35s var(--ease)}
+.nav ul a:hover::after{transform:scaleX(1);transform-origin:left}
+.nav-r{display:flex;align-items:center;gap:14px}
+.cart-btn{position:relative;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.cart-count{position:absolute;top:-3px;right:-3px;min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:var(--sun);color:var(--navy);font-size:11px;font-weight:700;display:grid;place-items:center;transition:transform .3s var(--ease)}
+.cart-count.bump{transform:scale(1.45)}
+.nav .btn{padding:12px 20px;font-size:14px}
+
+/* hero */
+.hero{padding:30px 0 80px}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:60px;align-items:center}
+.rating-pill{display:inline-flex;align-items:center;gap:10px;padding:8px 16px 8px 8px;background:#fff;border-radius:999px;font-size:13px;font-weight:500;box-shadow:0 4px 18px rgba(3,37,49,.06)}
+.avatars{display:flex}
+.avatars img{width:30px;height:30px;border-radius:50%;object-fit:cover;border:2px solid #fff;margin-left:-8px}
+.avatars img:first-child{margin-left:0}
+.hero h1{font-size:clamp(64px,9.4vw,148px);color:var(--navy);margin:26px 0 22px}
+.hero h1 .serif{display:block;font-size:.66em;line-height:1;margin-top:.08em;color:var(--navy)}
+.hero h1 .serif em{position:relative;font-style:italic}
+.hero h1 .serif em::after{content:"";position:absolute;left:-2%;right:-2%;bottom:.08em;height:.22em;background:var(--sun);z-index:-1;border-radius:4px;transform:scaleX(0);transform-origin:left;animation:mark 1s .9s var(--ease) forwards}
+@keyframes mark{to{transform:scaleX(1)}}
+.hero h1 .line{display:block;overflow:hidden}
+.hero h1 .line>span{display:block;transform:translateY(105%);animation:up 1s var(--ease) forwards}
+.hero h1 .line:nth-child(2)>span{animation-delay:.12s}
+@keyframes up{to{transform:none}}
+.hero p.lead{font-size:19px;color:var(--mute);max-width:470px}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap;margin:34px 0 34px}
+.trust{display:flex;gap:26px;flex-wrap:wrap;font-size:13px;font-weight:500;color:var(--navy)}
+.trust span{display:flex;align-items:center;gap:8px}
+.trust svg{flex:none}
+.hero-visual{position:relative;aspect-ratio:4/5}
+.arch{position:absolute;inset:0;border-radius:400px 400px var(--r) var(--r);overflow:hidden;background:#E6E0D8}
+.arch img{width:100%;height:100%;object-fit:cover;transform:scale(1.18);transition:transform 1.6s var(--ease)}
+.arch.in img{transform:scale(1.04)}
+.rays{position:absolute;left:50%;top:44%;width:120%;aspect-ratio:1;translate:-50% -50%;pointer-events:none;opacity:.55;mix-blend-mode:multiply;animation:spin 60s linear infinite}
+@keyframes spin{to{rotate:360deg}}
+.seal{position:absolute;right:-28px;top:12%;width:132px;height:132px;border-radius:50%;background:var(--sun);display:grid;place-items:center;box-shadow:0 20px 40px -18px rgba(3,37,49,.45);z-index:3}
+.seal svg.ring{position:absolute;inset:0;animation:spin 18s linear infinite}
+.seal b{font-family:Anton;font-size:30px;line-height:.9;text-align:center;color:var(--navy)}
+.seal b small{display:block;font-family:"DM Sans";font-size:10px;font-weight:700;letter-spacing:.14em}
+.chip{position:absolute;z-index:3;display:flex;align-items:center;gap:12px;padding:12px 18px 12px 12px;border-radius:18px;background:rgba(255,255,255,.72);backdrop-filter:blur(14px);box-shadow:0 18px 40px -20px rgba(3,37,49,.45);font-size:13px;font-weight:500;animation:float 6s ease-in-out infinite}
+.chip i{width:40px;height:40px;border-radius:12px;background:var(--navy);color:var(--sun);display:grid;place-items:center;font-style:normal;font-family:Anton;font-size:18px}
+.chip b{display:block;font-size:15px;color:var(--navy)}
+.chip.c1{left:-40px;bottom:22%}
+.chip.c2{right:-20px;bottom:6%;animation-delay:-3s}
+@keyframes float{50%{transform:translateY(-12px)}}
+
+/* marquee */
+.marquee{background:var(--sun);color:var(--navy);overflow:hidden;border-block:1.5px solid var(--navy);transform:rotate(-1.2deg);margin:10px -10px 0;position:relative;z-index:2}
+.marquee-track{display:flex;gap:46px;width:max-content;padding:16px 0;animation:mq 30s linear infinite}
+.marquee span{font-family:Anton;text-transform:uppercase;font-size:24px;letter-spacing:.02em;display:flex;align-items:center;gap:46px;white-space:nowrap}
+.marquee span::after{content:"";width:22px;height:22px;background:var(--navy);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2v9M4.5 6.5l6 6M19.5 6.5l-6 6M2 22h20' stroke='black' stroke-width='3' stroke-linecap='round' fill='none'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2v9M4.5 6.5l6 6M19.5 6.5l-6 6M2 22h20' stroke='black' stroke-width='3' stroke-linecap='round' fill='none'/%3E%3C/svg%3E") center/contain no-repeat}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* section heads */
+.sec{padding:130px 0}
+.sec-head{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:56px;flex-wrap:wrap}
+.sec-head h2{font-size:clamp(46px,6vw,86px);color:var(--navy)}
+.sec-head h2 .serif{font-size:1.04em}
+.sec-head p{max-width:380px;color:var(--mute)}
+
+/* results */
+.results{background:var(--navy);color:#fff;border-radius:44px 44px 0 0;margin-top:-30px;padding-top:160px}
+.results .sec-head h2{color:#fff}
+.results .sec-head p{color:rgba(255,255,255,.65)}
+.results .eyebrow{color:var(--sun)}
+.ba-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:60px;align-items:center}
+.ba{position:relative;aspect-ratio:1/1;border-radius:28px;overflow:hidden;cursor:ew-resize;user-select:none;touch-action:pan-y;--p:50%;background:#0b3442}
+.ba img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;transition:opacity .5s}
+.ba .before{clip-path:inset(0 calc(100% - var(--p)) 0 0)}
+.ba .bar{position:absolute;top:0;bottom:0;left:var(--p);width:2px;background:#fff;translate:-1px 0}
+.ba .knob{position:absolute;top:50%;left:var(--p);translate:-50% -50%;width:62px;height:62px;border-radius:50%;background:var(--sun);color:var(--navy);display:grid;place-items:center;box-shadow:0 10px 30px rgba(0,0,0,.35);transition:scale .2s}
+.ba:active .knob{scale:1.1}
+.ba .tag{position:absolute;top:20px;padding:7px 14px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:rgba(3,37,49,.7);backdrop-filter:blur(8px)}
+.ba .tag.l{left:20px}.ba .tag.r{right:20px;background:var(--sun);color:var(--navy)}
+.ba.swap img{opacity:0}
+.story .verified{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--sun)}
+.story h3{font-family:"Instrument Serif";font-style:italic;font-weight:400;font-size:clamp(34px,3.6vw,52px);line-height:1.05;margin:18px 0 22px}
+.story blockquote{font-size:18px;color:rgba(255,255,255,.78);min-height:150px}
+.story .who{margin-top:24px;font-weight:700;display:flex;align-items:center;gap:12px}
+.story .who .stars{font-size:15px}
+.story-txt{transition:opacity .4s,transform .4s var(--ease)}
+.story-txt.fade{opacity:0;transform:translateY(12px)}
+.people{display:flex;gap:12px;margin-top:40px;flex-wrap:wrap}
+.people button{width:64px;height:64px;border-radius:50%;overflow:hidden;border:2px solid transparent;opacity:.5;transition:all .3s var(--ease);position:relative}
+.people button img{width:100%;height:100%;object-fit:cover}
+.people button.on{opacity:1;border-color:var(--sun);transform:translateY(-4px)}
+.people button:hover{opacity:1}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:110px;border-top:1px solid rgba(255,255,255,.15);padding-top:50px}
+.stat b{font-family:Anton;font-size:clamp(56px,7vw,96px);color:var(--sun);line-height:1;display:block}
+.stat span{color:rgba(255,255,255,.7)}
+
+/* how */
+.how{background:var(--navy);color:#fff;padding-bottom:140px}
+.how-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.how-card{background:var(--navy-2);border:1px solid rgba(255,255,255,.08);border-radius:var(--r);padding:36px;min-height:320px;display:flex;flex-direction:column;justify-content:space-between;transition:transform .5s var(--ease),background .5s}
+.how-card:hover{transform:translateY(-8px);background:#0f3d4d}
+.how-card .n{font-family:Anton;font-size:90px;line-height:.8;color:transparent;-webkit-text-stroke:1.5px var(--sun)}
+.how-card h4{font-size:24px;font-weight:700;margin:18px 0 10px}
+.how-card p{color:rgba(255,255,255,.65)}
+.how .sec-head h2{color:#fff}
+
+/* ingredients */
+.ingr-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.ing{background:#fff;border-radius:var(--r);padding:28px;position:relative;overflow:hidden;min-height:250px;display:flex;flex-direction:column;justify-content:space-between;transition:transform .5s var(--ease),box-shadow .5s}
+.ing::before{content:"";position:absolute;width:220px;height:220px;border-radius:50%;background:var(--sun);right:-110px;top:-110px;transition:transform .7s var(--ease)}
+.ing:hover{transform:translateY(-6px);box-shadow:0 30px 60px -30px rgba(3,37,49,.35)}
+.ing:hover::before{transform:scale(4.5)}
+.ing>*{position:relative}
+.ing .dose{font-family:Anton;font-size:44px;color:var(--navy);line-height:1}
+.ing .dose small{font-family:"DM Sans";font-size:15px;font-weight:700;margin-left:4px}
+.ing h5{font-size:19px;color:var(--navy);margin-top:30px}
+.ing p{font-size:14px;color:var(--mute);margin-top:6px}
+.ing.feature{grid-column:span 2;background:var(--navy);color:#fff}
+.ing.feature .dose,.ing.feature h5{color:#fff}
+.ing.feature p{color:rgba(255,255,255,.7)}
+.ing.feature:hover::before{transform:scale(1.5)}
+.ing .tagline{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;opacity:.6}
+.artg{margin-top:26px;font-size:13px;color:var(--mute);text-align:center}
+
+/* programme */
+.prog{background:var(--sand)}
+.prog-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.prog-gallery{position:relative;aspect-ratio:1;border-radius:32px;overflow:hidden;background:#E6E0D8}
+.prog-gallery>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .7s,transform 1.2s var(--ease);transform:scale(1.05)}
+.prog-gallery>img.on{opacity:1;transform:none}
+.thumbs{display:flex;gap:10px;position:absolute;left:20px;bottom:20px;z-index:2}
+.thumbs button{width:58px;height:58px;border-radius:14px;overflow:hidden;border:2px solid transparent;background:#fff;opacity:.75;transition:.3s}
+.thumbs button.on{border-color:var(--navy);opacity:1}
+.thumbs img{width:100%;height:100%;object-fit:cover}
+.prog h2{font-size:clamp(46px,5vw,74px);color:var(--navy)}
+.plans{display:grid;gap:14px;margin:30px 0}
+.plan{display:flex;align-items:center;gap:18px;padding:22px 24px;background:#fff;border-radius:20px;border:2px solid transparent;cursor:pointer;transition:border .3s,transform .3s var(--ease);position:relative}
+.plan:hover{transform:translateX(4px)}
+.plan.on{border-color:var(--navy)}
+.plan .radio{width:24px;height:24px;border-radius:50%;border:2px solid var(--navy);display:grid;place-items:center;flex:none}
+.plan.on .radio::after{content:"";width:12px;height:12px;border-radius:50%;background:var(--navy)}
+.plan .info{flex:1}
+.plan .info b{font-size:18px;color:var(--navy)}
+.plan .info span{display:block;font-size:14px;color:var(--mute)}
+.plan .price{text-align:right;font-weight:700;font-size:22px;color:var(--navy)}
+.plan .price s{display:block;font-size:14px;color:var(--mute);font-weight:500}
+.plan .badge{position:absolute;top:-12px;right:22px;background:var(--sun);color:var(--navy);font-size:11px;font-weight:700;letter-spacing:.1em;padding:5px 12px;border-radius:999px}
+.perks{display:grid;grid-template-columns:1fr 1fr;gap:10px 20px;margin:24px 0 30px;font-size:14px;font-weight:500}
+.perks li{list-style:none;display:flex;gap:10px;align-items:center}
+.perks li::before{content:"✓";width:22px;height:22px;flex:none;border-radius:50%;background:var(--navy);color:var(--sun);display:grid;place-items:center;font-size:12px}
+.prog .btn{width:100%;padding:22px}
+
+/* shop */
+.shop-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.card{background:#fff;border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;transition:transform .5s var(--ease),box-shadow .5s}
+.card:hover{transform:translateY(-8px);box-shadow:0 30px 60px -30px rgba(3,37,49,.35)}
+.card .media{position:relative;aspect-ratio:1;overflow:hidden;background:var(--sand)}
+.card .media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .6s,transform 1s var(--ease)}
+.card .media img.alt{opacity:0}
+.card:hover .media img.alt{opacity:1}
+.card:hover .media img{transform:scale(1.05)}
+.card .sale{position:absolute;top:14px;left:14px;z-index:2;background:var(--sun);color:var(--navy);font-size:11px;font-weight:700;letter-spacing:.1em;padding:6px 12px;border-radius:999px}
+.card .body{padding:22px;display:flex;flex-direction:column;flex:1}
+.card .sub{font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--mute);text-transform:uppercase}
+.card h4{font-size:20px;color:var(--navy);margin:6px 0 4px}
+.card .rev{font-size:13px;color:var(--mute);display:flex;gap:6px;align-items:center}
+.card .row{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:20px}
+.card .p{font-weight:700;font-size:19px;color:var(--navy)}
+.card .p s{font-weight:500;font-size:14px;color:var(--mute);margin-left:6px}
+.add{width:46px;height:46px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-size:22px;transition:transform .3s var(--ease),background .3s}
+.add:hover{transform:rotate(90deg);background:var(--sun);color:var(--navy)}
+.add.done{background:#2f8f5b;transform:none}
+
+/* men & women */
+.mw{display:grid;grid-template-columns:1fr 1fr;border-radius:32px;overflow:hidden;background:var(--navy);color:#fff}
+.mw img{width:100%;height:100%;object-fit:cover;min-height:420px}
+.mw .t{padding:60px;display:flex;flex-direction:column;justify-content:center}
+.mw h3{font-size:clamp(40px,4.4vw,64px)}
+.mw p{color:rgba(255,255,255,.7);margin:20px 0 30px;max-width:420px}
+
+/* reviews */
+.wall{columns:3 320px;column-gap:20px}
+.rev-card{break-inside:avoid;background:#fff;border-radius:var(--r);padding:28px;margin-bottom:20px;transition:transform .4s var(--ease)}
+.rev-card:hover{transform:rotate(-.6deg) scale(1.01)}
+.rev-card.yellow{background:var(--sun)}
+.rev-card.navy{background:var(--navy);color:#fff}
+.rev-card.navy h6,.rev-card.navy .nm{color:#fff}
+.rev-card h6{font-size:18px;color:var(--navy);margin:12px 0 10px}
+.rev-card p{font-size:15px;color:inherit;opacity:.85}
+.rev-card p.clamp{display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden}
+.rev-card .more{font-size:13px;font-weight:700;text-decoration:underline;margin-top:8px}
+.rev-card .nm{display:flex;justify-content:space-between;align-items:center;margin-top:18px;font-weight:700;color:var(--navy);font-size:14px}
+.rev-card .nm span{font-size:11px;letter-spacing:.12em;opacity:.6}
+.rev-card.navy .stars{color:var(--sun)}
+.rev-card.yellow .stars{color:var(--navy)}
+.rev-card.photo{padding:0;overflow:hidden}
+.rev-card.photo img{width:100%}
+.tp{display:flex;align-items:center;gap:16px;font-weight:500}
+.tp b{font-family:Anton;font-size:56px;color:var(--navy);line-height:1}
+
+/* guarantee */
+.guar{padding:0 0 130px}
+.guar-box{background:var(--sun);border-radius:40px;padding:80px;display:grid;grid-template-columns:auto 1fr auto;gap:60px;align-items:center;overflow:hidden;position:relative}
+.big-seal{width:210px;height:210px;position:relative;display:grid;place-items:center}
+.big-seal svg{position:absolute;inset:0;animation:spin 22s linear infinite}
+.big-seal b{font-family:Anton;font-size:76px;color:var(--navy);line-height:.8;text-align:center}
+.big-seal b small{display:block;font-size:18px;letter-spacing:.1em;margin-top:6px}
+.guar h2{font-size:clamp(40px,4.6vw,68px);color:var(--navy)}
+.guar p{color:var(--navy);opacity:.8;margin-top:14px;max-width:520px;font-size:17px}
+
+/* faq */
+.faq-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:60px}
+details{border-bottom:1px solid var(--line);padding:26px 0}
+summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:20px;font-size:20px;font-weight:700;color:var(--navy)}
+summary::-webkit-details-marker{display:none}
+summary i{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--navy);display:grid;place-items:center;font-style:normal;flex:none;transition:transform .4s var(--ease),background .3s}
+details[open] summary i{transform:rotate(45deg);background:var(--navy);color:#fff}
+details p{color:var(--mute);margin-top:14px;max-width:620px;animation:fadeD .5s var(--ease)}
+@keyframes fadeD{from{opacity:0;transform:translateY(-8px)}}
+
+/* newsletter + footer */
+footer{background:var(--navy);color:#fff;border-radius:44px 44px 0 0;padding:100px 0 0;overflow:hidden}
+.news{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:end;padding-bottom:80px;border-bottom:1px solid rgba(255,255,255,.12)}
+.news h3{font-size:clamp(40px,5vw,72px)}
+.news form{display:flex;background:rgba(255,255,255,.08);border-radius:999px;padding:6px;border:1px solid rgba(255,255,255,.15)}
+.news input{flex:1;background:none;border:0;color:#fff;font:inherit;padding:0 22px;outline:none;min-width:0}
+.news input::placeholder{color:rgba(255,255,255,.5)}
+.news small{display:block;margin-top:12px;color:rgba(255,255,255,.5)}
+.f-cols{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;padding:60px 0}
+.f-cols h6{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--sun);margin-bottom:18px}
+.f-cols a{display:block;color:rgba(255,255,255,.7);margin-bottom:10px;transition:color .2s}
+.f-cols a:hover{color:#fff}
+.f-cols .logo img{height:28px;filter:invert(1) grayscale(1) brightness(2);mix-blend-mode:screen}
+.f-cols p{color:rgba(255,255,255,.55);margin-top:18px;font-size:14px;max-width:320px}
+.giant{font-family:Anton;font-size:clamp(60px,17vw,270px);line-height:.8;text-align:center;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.18);user-select:none;margin:50px 0 -.12em;white-space:nowrap}
+.legal{display:flex;justify-content:space-between;font-size:13px;color:rgba(255,255,255,.45);padding-top:24px;border-top:1px solid rgba(255,255,255,.12);flex-wrap:wrap;gap:10px}
+
+/* cart drawer */
+.scrim{position:fixed;inset:0;background:rgba(3,37,49,.45);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .4s;z-index:90}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,100%);background:var(--cream);z-index:100;transform:translateX(100%);transition:transform .55s var(--ease);display:flex;flex-direction:column}
+body.cart-open .scrim{opacity:1;pointer-events:auto}
+body.cart-open .drawer{transform:none}
+.drawer-h{display:flex;justify-content:space-between;align-items:center;padding:24px 26px;border-bottom:1px solid var(--line)}
+.drawer-h h4{font-family:Anton;font-size:28px;text-transform:uppercase;color:var(--navy)}
+.drawer-h button{font-size:26px;width:40px;height:40px;border-radius:50%;background:#fff}
+.gift{margin:18px 26px 0;padding:14px 16px;border-radius:14px;background:var(--sun-soft);font-size:13px;font-weight:500;color:var(--navy)}
+.lines{flex:1;overflow:auto;padding:10px 26px}
+.line-item{display:grid;grid-template-columns:72px 1fr auto;gap:14px;align-items:center;padding:16px 0;border-bottom:1px solid var(--line);animation:fadeD .4s var(--ease)}
+.line-item img{width:72px;height:72px;border-radius:14px;object-fit:cover}
+.line-item b{color:var(--navy);display:block}
+.qty{display:inline-flex;align-items:center;gap:12px;margin-top:6px;background:#fff;border-radius:999px;padding:4px 10px;font-size:14px}
+.qty button{width:20px;font-weight:700}
+.empty{text-align:center;color:var(--mute);padding:60px 0}
+.drawer-f{padding:22px 26px;border-top:1px solid var(--line)}
+.drawer-f .tot{display:flex;justify-content:space-between;font-weight:700;font-size:18px;color:var(--navy);margin-bottom:16px}
+.drawer-f .btn{width:100%}
+.toast{position:fixed;left:50%;bottom:28px;translate:-50% 250%;background:var(--navy);color:#fff;padding:14px 22px;border-radius:999px;font-weight:500;z-index:120;transition:translate .5s var(--ease);font-size:14px}
+.toast.on{translate:-50% 0}
+
+/* mobile sticky buy */
+.m-buy{display:none}
+
+@media (max-width:1000px){
+  .hero-grid,.ba-grid,.prog-grid,.faq-grid,.news,.mw{grid-template-columns:1fr}
+  .hero-visual{max-width:520px;margin:30px auto 0;width:100%}
+  .how-cards,.stat-row{grid-template-columns:1fr}
+  .ingr-grid,.shop-grid{grid-template-columns:repeat(2,1fr)}
+  .guar-box{grid-template-columns:1fr;padding:50px 30px;text-align:center;justify-items:center}
+  .f-cols{grid-template-columns:1fr 1fr}
+  .nav ul{display:none}
+  .chip.c1{left:-6px}.chip.c2{right:-6px}.seal{right:-6px}
+}
+@media (max-width:640px){
+  .wrap{width:calc(100% - 32px)}
+  .sec{padding:90px 0}
+  .ingr-grid,.shop-grid{grid-template-columns:1fr}
+  .ing.feature{grid-column:auto}
+  .nav .btn{display:none}
+  .seal{width:100px;height:100px}.seal b{font-size:22px}
+  .chip{font-size:12px}.chip i{width:34px;height:34px}
+  .mw .t{padding:36px}
+  .perks{grid-template-columns:1fr}
+  .m-buy{display:flex;position:fixed;left:12px;right:12px;bottom:12px;z-index:60;transform:translateY(150%);transition:transform .5s var(--ease)}
+  .m-buy.on{transform:none}
+  .m-buy .btn{width:100%}
+  .results{padding-top:120px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}.hero h1 .line>span{transform:none}}
+</style>
+</head>
+<body>
+
+<div class="announce" id="announce">
+  <div class="on">🌞 <b>90-day money-back guarantee</b> — clear skin or your money back</div>
+  <div>Free delivery on all subscriptions across Australia</div>
+  <div>Get <b>FREE pimple patches</b> with the 90-Day Programme</div>
+</div>
+
+<header id="hdr">
+  <nav class="wrap nav">
+    <a href="#" class="logo"><img src="https://porefavor.com.au/cdn/shop/files/Pore_Favor_Logo.png?width=300" alt="Pore Favor"></a>
+    <ul>
+      <li><a href="#programme">Acne Supplement</a></li>
+      <li><a href="#results">Results</a></li>
+      <li><a href="#science">Science</a></li>
+      <li><a href="#shop">Shop all</a></li>
+      <li><a href="#faq">FAQs</a></li>
+    </ul>
+    <div class="nav-r">
+      <a href="#programme" class="btn btn-primary">Start programme</a>
+      <button class="cart-btn" id="openCart" aria-label="Open cart">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.7 11.2a1 1 0 0 0 1 .8h9.4a1 1 0 0 0 1-.8L21 7H6"/></svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="rating-pill rv in">
+        <div class="avatars" id="heroAvatars"></div>
+        <span class="stars">★★★★★</span> <b>4.7</b> from 3,000+ reviews
+      </div>
+      <h1 class="display">
+        <span class="line"><span>Clear skin</span></span>
+        <span class="line"><span class="serif">starts from <em>within.</em></span></span>
+      </h1>
+      <p class="lead rv d1">Two capsules a day. Australia's dermatologist-endorsed acne supplement that works on the root cause — not just the surface.</p>
+      <div class="hero-ctas rv d2">
+        <a href="#programme" class="btn btn-primary">Start 90-Day Programme <span class="arrow">→</span></a>
+        <a href="#results" class="btn btn-ghost">See real results</a>
+      </div>
+      <div class="trust rv d3">
+        <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3Z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg>90-day guarantee</span>
+        <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="13" height="10" rx="1"/><path d="M16 10h3l2 3v4h-5"/><circle cx="7" cy="18" r="1.6"/><circle cx="18" cy="18" r="1.6"/></svg>Free AU delivery*</span>
+        <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h16M12 4v16"/></svg>AUST L 444356</span>
+      </div>
+    </div>
+
+    <div class="hero-visual rv">
+      <div class="arch" id="arch">
+        <img src="https://cdn.shopify.com/s/files/1/0557/4157/9311/files/the-acne-supplement-617553_60bd7e05-3a26-4617-9b84-a0d345edc493.jpg?width=1100" alt="Pore Favor acne supplement jar">
+      </div>
+      <svg class="rays" viewBox="0 0 200 200" aria-hidden="true"><g stroke="#F4D52B" stroke-width="1.2"></g></svg>
+      <div class="seal">
+        <svg class="ring" viewBox="0 0 132 132"><defs><path id="c1" d="M66,66 m-52,0 a52,52 0 1,1 104,0 a52,52 0 1,1 -104,0"/></defs><text font-size="10.5" font-weight="700" letter-spacing="3.2" fill="#032531" font-family="DM Sans"><textPath href="#c1">TREATS THE ROOT CAUSE • TREATS THE ROOT CAUSE •</textPath></text></svg>
+        <b>2<small>A DAY</small></b>
+      </div>
+      <div class="chip c1"><i>90</i><div><b>Day guarantee</b>100% money back</div></div>
+      <div class="chip c2"><i>★</i><div><b>Excellent 4.7</b>Rated on Trustpilot</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee" aria-hidden="true"><div class="marquee-track" id="mq"></div></div>
+
+<!-- RESULTS -->
+<section class="results sec" id="results">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow rv">Unfiltered · Verified customers</p>
+        <h2 class="display rv d1">Real skin.<br><span class="serif">real results.</span></h2>
+      </div>
+      <p class="rv d2">Drag the slider to see the difference. Every photo is from a verified Pore Favor customer — no filters, no retouching.</p>
+    </div>
+
+    <div class="ba-grid">
+      <div class="ba rv" id="ba">
+        <img class="after" id="baAfter" alt="After">
+        <img class="before" id="baBefore" alt="Before">
+        <span class="tag l">Before</span><span class="tag r">After</span>
+        <div class="bar"></div>
+        <div class="knob"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m9 6-6 6 6 6M15 6l6 6-6 6"/></svg></div>
+      </div>
+
+      <div class="story rv d1">
+        <div class="story-txt" id="storyTxt">
+          <span class="verified">✓ VERIFIED BUYER</span>
+          <h3 id="sTitle"></h3>
+          <blockquote id="sQuote"></blockquote>
+          <div class="who"><span class="stars">★★★★★</span><span id="sName"></span></div>
+        </div>
+        <div class="people" id="people"></div>
+      </div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat rv"><b data-count="3000" data-suffix="+">0</b><span>Five-star reviews from real customers</span></div>
+      <div class="stat rv d1"><b data-count="4.7" data-dec="1">0</b><span>"Excellent" average rating on Trustpilot</span></div>
+      <div class="stat rv d2"><b data-count="90" data-suffix=" days">0</b><span>To see results — or get 100% of your money back</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 class="display rv">Not another<br><span class="serif">topical.</span></h2>
+      <p class="rv d1" style="color:rgba(255,255,255,.65)">Creams work on the surface. The Acne Supplement takes blemish-busting direct to the source.</p>
+    </div>
+    <div class="how-cards">
+      <div class="how-card rv"><span class="n">01</span><div><h4>Two capsules, once a day</h4><p>Easy-to-swallow capsules with your morning routine. No stinging, no peeling, no 10-step regime.</p></div></div>
+      <div class="how-card rv d1"><span class="n">02</span><div><h4>Works from the inside out</h4><p>Kudzu, zinc and a stack of skin vitamins help reduce oily, congested skin and the occurrence of pimples.</p></div></div>
+      <div class="how-card rv d2"><span class="n">03</span><div><h4>Stick with it for 90 days</h4><p>Skin renews in cycles. Most customers notice a change within weeks — the full programme locks it in.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- INGREDIENTS -->
+<section class="sec" id="science">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow rv">What's inside every capsule</p>
+        <h2 class="display rv d1">Backed by<br><span class="serif">science.</span></h2>
+      </div>
+      <p class="rv d2">A short, transparent formula. Every active, every dose — straight from the label.</p>
+    </div>
+    <div class="ingr-grid">
+      <div class="ing feature rv"><span class="tagline">Hero active</span><div><div class="dose">650<small>mg</small></div><h5>Kudzu vine (Pueraria lobata)</h5><p>Botanical extract from the dry flower — the star of the formula, targeting the internal triggers behind oily, breakout-prone skin.</p></div></div>
+      <div class="ing rv d1"><span class="tagline">Mineral</span><div><div class="dose">12<small>mg</small></div><h5>Zinc</h5><p>Supports skin repair and healthy oil balance.</p></div></div>
+      <div class="ing rv d2"><span class="tagline">Vitamin</span><div><div class="dose">68.7<small>mg</small></div><h5>Vitamin B5</h5><p>Pantothenic acid for congested skin.</p></div></div>
+      <div class="ing rv"><span class="tagline">Vitamin</span><div><div class="dose">500<small>IU</small></div><h5>Vitamin D3</h5><p>The sunshine vitamin, in every dose.</p></div></div>
+      <div class="ing rv d1"><span class="tagline">Antioxidant</span><div><div class="dose">70<small>mcg</small></div><h5>Selenium</h5><p>Antioxidant support for calmer skin.</p></div></div>
+      <div class="ing rv d2"><span class="tagline">Vitamin</span><div><div class="dose">25<small>mg</small></div><h5>Vitamin C</h5><p>Plus vitamins A &amp; E for skin health.</p></div></div>
+      <div class="ing rv d3"><span class="tagline">Absorption</span><div><div class="dose">2.5<small>mg</small></div><h5>Black pepper</h5><p>Piper nigrum, with coconut oil 175mg.</p></div></div>
+    </div>
+    <p class="artg">ARTG listed: AUST L 444356 · Always read the label and follow the directions for use.</p>
+  </div>
+</section>
+
+<!-- PROGRAMME -->
+<section class="prog sec" id="programme">
+  <div class="wrap prog-grid">
+    <div class="prog-gallery rv" id="gal">
+      <div class="thumbs" id="thumbs"></div>
+    </div>
+    <div>
+      <p class="eyebrow rv">The Acne Supplement</p>
+      <h2 class="display rv d1">Pick your<br><span class="serif">programme.</span></h2>
+      <div class="plans rv d2" id="plans">
+        <label class="plan on" data-id="bundle">
+          <span class="badge">BEST VALUE · FREE PATCHES</span>
+          <span class="radio"></span>
+          <span class="info"><b>90-Day Programme</b><span>3 jars · 180 capsules · $49.99/month</span></span>
+          <span class="price">$149.97<s>$165.00</s></span>
+        </label>
+        <label class="plan" data-id="supp">
+          <span class="radio"></span>
+          <span class="info"><b>1 Month Supply</b><span>1 jar · 60 capsules</span></span>
+          <span class="price">$69.00</span>
+        </label>
+      </div>
+      <ul class="perks rv d3">
+        <li>2 capsules, once a day</li>
+        <li>Works for men &amp; women</li>
+        <li>90-day money-back guarantee</li>
+        <li>ARTG listed in Australia</li>
+        <li>Vegan &amp; cruelty-free</li>
+        <li>GMP certified</li>
+      </ul>
+      <button class="btn btn-primary rv d3" id="buyPlan">Add to cart — <span id="planPrice">$149.97</span> <span class="arrow">→</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- SHOP -->
+<section class="sec" id="shop">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow rv">Complete the routine</p>
+        <h2 class="display rv d1">Clear inside.<br><span class="serif">calm outside.</span></h2>
+      </div>
+      <p class="rv d2">Pair the supplement with our probiotic skincare for a routine that works on both fronts.</p>
+    </div>
+    <div class="shop-grid" id="shopGrid"></div>
+  </div>
+</section>
+
+<!-- MEN & WOMEN -->
+<section class="wrap rv" style="padding-bottom:130px">
+  <div class="mw">
+    <img src="https://cdn.shopify.com/s/files/1/0557/4157/9311/files/pore-favor-works-for-men-and-women-jacqueline-day-0-day-68.jpg?width=1000" alt="Jacqueline's bacne, day 0 vs day 68" loading="lazy">
+    <div class="t">
+      <p class="eyebrow" style="color:var(--sun)">Face · Back · Chest</p>
+      <h3 class="display">Bacne too.<br><span class="serif">Day 0 → Day 68.</span></h3>
+      <p>Because it works from within, the Acne Supplement isn't limited to your face. Jacqueline, a verified customer, saw her back clear in just over two months.</p>
+      <a href="#programme" class="btn btn-sun" style="align-self:start">Start your programme →</a>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="sec" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow rv">What 3,000+ customers say</p>
+        <h2 class="display rv d1">The skeptics<br><span class="serif">became believers.</span></h2>
+      </div>
+      <div class="tp rv d2"><b>4.7</b><div><span class="stars" style="font-size:22px">★★★★★</span><br>Rated "Excellent" on Trustpilot</div></div>
+    </div>
+    <div class="wall" id="wall"></div>
+  </div>
+</section>
+
+<!-- GUARANTEE -->
+<section class="guar">
+  <div class="wrap">
+    <div class="guar-box rv">
+      <div class="big-seal">
+        <svg viewBox="0 0 210 210"><defs><path id="c2" d="M105,105 m-88,0 a88,88 0 1,1 176,0 a88,88 0 1,1 -176,0"/></defs><text font-size="15" font-weight="700" letter-spacing="5.4" fill="#032531" font-family="DM Sans"><textPath href="#c2">MONEY BACK GUARANTEE • NO QUESTIONS ASKED •</textPath></text></svg>
+        <b>90<small>DAYS</small></b>
+      </div>
+      <div>
+        <h2 class="display">Clearer skin<br><span class="serif">or your money back.</span></h2>
+        <p>If you don't get a clearer complexion after taking the Acne Supplement as directed for 90 days, we'll refund you 100%. No questions asked.</p>
+      </div>
+      <a href="#programme" class="btn btn-primary">Try it risk-free <span class="arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec" id="faq" style="padding-top:0">
+  <div class="wrap faq-grid">
+    <div>
+      <p class="eyebrow rv">Good questions</p>
+      <h2 class="display rv d1" style="font-size:clamp(46px,5.4vw,80px);color:var(--navy)">FAQs<span class="serif">.</span></h2>
+      <p class="rv d2" style="color:var(--mute);margin-top:18px;max-width:320px">Can't find your answer? Our team replies within a day — <a href="#" style="text-decoration:underline">contact us</a>.</p>
+    </div>
+    <div class="rv d1">
+      <details open><summary>How do I take the Acne Supplement?<i>+</i></summary><p>Take 2 easy-to-swallow capsules once a day. One jar contains 60 capsules — a 30-day supply.</p></details>
+      <details><summary>How soon will I see results?<i>+</i></summary><p>Everyone's skin is different. Many customers report a difference within a few weeks, which is why we recommend the full 90-Day Programme — and back it with a money-back guarantee.</p></details>
+      <details><summary>Does it work for men and for body acne?<i>+</i></summary><p>Yes. The supplement works from within, so it's suitable for men and women and isn't limited to the face — see Jacqueline's bacne results above.</p></details>
+      <details><summary>How does the money-back guarantee work?<i>+</i></summary><p>Take the Acne Supplement as directed for 90 days. If you don't see a clearer complexion, contact us and we'll refund you 100%.</p></details>
+      <details><summary>Is it approved in Australia?<i>+</i></summary><p>The Acne Supplement is listed on the Australian Register of Therapeutic Goods: AUST L 444356. Always read the label and follow the directions for use.</p></details>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="news">
+      <h3 class="display">Join the clear<br><span class="serif">skin club.</span></h3>
+      <div>
+        <p style="color:rgba(255,255,255,.7);margin-bottom:18px">Subscribe and get <b style="color:var(--sun)">FREE pimple patches</b> on your first order.</p>
+        <form id="newsForm"><input type="email" required placeholder="Your email address" aria-label="Email"><button class="btn btn-sun" style="padding:14px 24px">Subscribe</button></form>
+        <small>No spam. Unsubscribe anytime.</small>
+      </div>
+    </div>
+    <div class="f-cols">
+      <div><a class="logo" href="#"><img src="https://porefavor.com.au/cdn/shop/files/Pore_Favor_Logo.png?width=300" alt="Pore Favor"></a><p>The inside-out approach to clear skin. Made for Australians who've tried everything else.</p></div>
+      <div><h6>Shop</h6><a href="#programme">Acne Supplement</a><a href="#programme">90-Day Programme</a><a href="#shop">Face Wash</a><a href="#shop">Moisturiser</a><a href="#shop">Blemish Patches</a></div>
+      <div><h6>Help</h6><a href="#faq">FAQs</a><a href="#">Shipping &amp; Returns</a><a href="#">Money Back Guarantee</a><a href="#">Manage Subscription</a><a href="#">Contact us</a></div>
+      <div><h6>Pore Favor</h6><a href="#">Journal</a><a href="#">Become an Ambassador</a><a href="#">Instagram</a><a href="#">Facebook</a></div>
+    </div>
+    <div class="legal"><span>© Pore Favor 2026 · AUST L 444356 · Always read the label.</span><span>Privacy Policy · Terms of use</span></div>
+    <div class="giant">PORE FAVOR</div>
+  </div>
+</footer>
+
+<div class="m-buy" id="mBuy"><a href="#programme" class="btn btn-primary">Start 90-Day Programme — $149.97</a></div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" aria-label="Cart">
+  <div class="drawer-h"><h4>Your bag</h4><button id="closeCart" aria-label="Close">×</button></div>
+  <div class="gift" id="gift">🎁 Add the 90-Day Programme to unlock FREE blemish patches.</div>
+  <div class="lines" id="lines"></div>
+  <div class="drawer-f"><div class="tot"><span>Subtotal</span><span id="subtotal">$0.00</span></div><button class="btn btn-primary">Checkout <span class="arrow">→</span></button></div>
+</aside>
+<div class="toast" id="toast"></div>
+
+<script>
+const C = 'https://cdn.shopify.com/s/files/1/0557/4157/9311/files/';
+const img = (f, w = 800) => `${C}${f}?width=${w}`;
+const $ = s => document.querySelector(s);
+
+/* ---------- data (from porefavor.com.au) ---------- */
+const products = {
+  bundle: { name: '90-Day Programme', sub: '3 jars · 180 capsules', price: 149.97, was: 165, img: img('shopify_product_images_-_clears_skin_-_acne_supplement_2.png', 400) },
+  supp:   { name: 'The Acne Supplement', sub: 'Treats the root cause', price: 69, img: img('the-acne-supplement-617553_60bd7e05-3a26-4617-9b84-a0d345edc493.jpg', 400),
+            alt: img('the-acne-supplement-651579_a18c733a-c4fe-4026-b613-1ea9275254a3.jpg') },
+  wash:   { name: 'Probiotic Face Wash', sub: 'Anti-breakout face wash', price: 27.99, was: 29.99, img: img('Blemish_Face_Wash_1_1.jpg', 400), alt: img('Blemish_Face_Wash_3_1.jpg') },
+  moist:  { name: 'Probiotic Moisturiser', sub: 'Restores skin microbiome', price: 27.99, was: 34.99, img: img('Pore_Favor_Blemish_Moisturiser_1.png', 400), alt: img('Probiotic_Moisturiser_WomanApplyingToFace.png') },
+  patch:  { name: 'Blemish Patches', sub: 'Ultra-thin & invisible', price: 15, img: img('2deb60d417073645dcc1d72277d939d662b53cff.jpg', 400), alt: img('Pimplepathcugc1.png') },
+};
+
+const people = [
+  { n: 'Zoe', f: 'Zoe', t: '15 years of blemishes to blemish-free in 2.5 weeks!', q: '“WOW WOW WOW!!! I’m a skeptical person when it comes to buying things for my trouble skin as after 15 years nothing has worked… Within 2.5 weeks my skin has transformed. For the first time in YEARS I’m confident enough to go makeup free.”' },
+  { n: 'Chantelle F.', f: 'Chantelle', t: 'Skin saver!', q: '“I don’t usually upload photos of myself on the internet for reviews but I just wanted to encourage anyone who’s suffered with bad skin for a long time like me… to go ahead and give this supplement a shot.”' },
+  { n: 'Matilda R.', f: 'Mat', t: 'The only thing that worked!', q: '“Where I would once get up to 7 or so nasty blemishes, I now only get one every now and then and they heal much faster. My skin isn’t perfect but the progress is incredible and has happened so fast.”' },
+  { n: 'Nicole A.', f: 'Nicole', t: 'Finally something that works!!!', q: '“I’ve had issues with my skin since my teens (I’m now 43). By week 3 there was a massive difference… now I can confirm I am happy to leave the house with just tinted sunscreen on!!”' },
+  { n: 'Sarah K.', f: 'Sarah', t: 'Look no further than Pore Favor!', q: '“I have been to dermatologists, GPs, herbal remedies, you name it… This product has changed my skin for the better. I am now turning 30 soon and I can safely say the acne-prone life is over.”' },
+  { n: 'William P.', f: 'William', t: 'Honestly… just give it a go.', q: '“At the start I thought it was just a gimmick like everything else on the Internet… the best money I have ever spent on blemish treatment (and I have tried a lot of things).”' },
+  { n: 'Lucy P.', f: 'Lucy', t: 'Amazing product! So grateful.', q: '“Great product that actually works! Tried everything before this from natural to doctor prescribed drugs. Very happy.”' },
+];
+
+const reviews = [
+  { n: 'Zoe', t: '15 years of blemishes to blemish FREE in 2.5 weeks!', q: 'WOW WOW WOW!!! I’m a skeptical person when it comes to buying things for my trouble skin as after 15 years nothing has worked and I’ve wasted a lot of money. Within 2.5 weeks my skin has transformed. For the first time in YEARS I’m confident enough to go makeup free.' },
+  { photo: img('3-month-bundle-890024.jpg', 700), alt: 'Nina T. Trustpilot review' },
+  { n: 'Brook B.', t: 'Life Changing', q: 'I have been suffering with blemishes ever since I was a teenager. I’ve tried every possible product and after years of failure, I have finally found something that works! I can’t quite put into words how thankful I am as this supplement has genuinely changed my life.', c: 'yellow' },
+  { n: 'Sarah K.', t: 'LOOK NO FURTHER THAN PORE FAVOR!', q: 'I have suffered with acne for the best portion of my life. I have been to dermatologists, GP’s, herbal remedies, you name it, I have tried it. I don’t recommend something until I believe in it. This product has changed my skin for the better. I used 2 supplements per day for 3 months, then reduced it down to 1 supplement. I am now turning 30 soon and I can safely say the acne prone life is over. This is the most incredible supplement out there for acne prone skins and believe me I have tried them all. Thank you Pore Favor, for putting a stop to my acne. Finally!!!!' },
+  { n: 'Matilda R.', t: 'Only Thing That Worked!', q: 'I have had bad skin for around two and a half years now and it has really taken a toll on my mental health. After nearly three months of using the supplement, my skin is completely different. It truly feels like the issue is being resolved from within. Where I would once get up to 7 or so nasty blemishes, I now only get one every now and then and they heal much faster. My skin isn’t perfect but the progress is incredible and has happened so fast.', c: 'navy' },
+  { n: 'William P.', t: 'Honestly.. Don’t question it... Just give it a go', q: 'At the start I thought it was just a gimmick like everything else on the Internet, but after talking to customer support and reading more reviews, I took a chance. And what can I say... the best money I have ever spent on blemish treatment (and I have tried a lot of things). For years I wanted a quick fix for my skin. I was on the brink of giving up and just putting up with it.. until these supplements saved the day.' },
+  { n: 'Lucy P.', t: 'Amazing product! So grateful.', q: 'Great product that actually works! Tried everything before this from natural to doctor prescribed drugs. Very happy.', c: 'yellow' },
+  { n: 'Nicole A.', t: 'Finally something that works!!!', q: 'I’ve had issues with my skin since my teens (I’m now 43 years old). I’ve been taking the tablets for over 2 months now and am definitely seeing a difference! By week 3 there was a massive difference in my skin, it feels like it’s just stronger somehow. I have never felt confident without make-up (which is ridiculous as it just causes more blemishes) and now I can confirm I am happy to leave the house with just tinted sunscreen on!! These tablets are absolutely incredible!!' },
+  { n: 'Chantelle F.', t: 'Skin saver!', q: 'I don’t usually upload photos of myself on the internet for reviews but I just wanted to encourage anyone who’s suffered with bad skin for a long time like me and has practically tried everything and feels like giving up to go ahead and give this supplement a shot.' },
+];
+
+/* ---------- announcement rotator ---------- */
+{
+  const items = [...document.querySelectorAll('#announce div')];
+  let i = 0;
+  setInterval(() => {
+    const cur = items[i]; cur.classList.replace('on', 'out');
+    setTimeout(() => cur.classList.remove('out'), 600);
+    i = (i + 1) % items.length; items[i].classList.add('on');
+  }, 3800);
+}
+
+/* ---------- header + mobile buy bar ---------- */
+addEventListener('scroll', () => {
+  $('#hdr').classList.toggle('scrolled', scrollY > 20);
+  $('#mBuy').classList.toggle('on', scrollY > 700 && scrollY < document.body.scrollHeight - innerHeight - 600);
+}, { passive: true });
+
+/* ---------- hero bits ---------- */
+$('#heroAvatars').innerHTML = ['Zoe', 'Nicole', 'Sarah', 'Lucy'].map(f => `<img src="${img(f + '_After.png', 80)}" alt="">`).join('');
+{
+  const g = document.querySelector('.rays g');
+  for (let a = 0; a < 360; a += 10) {
+    const r = a * Math.PI / 180, x = 100 + Math.cos(r) * 100, y = 100 + Math.sin(r) * 100;
+    g.insertAdjacentHTML('beforeend', `<line x1="${100 + Math.cos(r) * 70}" y1="${100 + Math.sin(r) * 70}" x2="${x}" y2="${y}"/>`);
+  }
+}
+setTimeout(() => $('#arch').classList.add('in'), 100);
+
+/* ---------- marquee ---------- */
+{
+  const words = ['Treats the root cause', 'Dermatologist endorsed', '2 capsules a day', 'Works for men & women', '90-day money back', '3,000+ five-star reviews', 'ARTG listed'];
+  const html = words.map(w => `<span>${w}</span>`).join('');
+  $('#mq').innerHTML = html + html;
+}
+
+/* ---------- before / after slider ---------- */
+{
+  const ba = $('#ba'), before = $('#baBefore'), after = $('#baAfter');
+  const set = x => { const r = ba.getBoundingClientRect(); ba.style.setProperty('--p', Math.min(100, Math.max(0, (x - r.left) / r.width * 100)) + '%'); };
+  let drag = false;
+  ba.addEventListener('pointerdown', e => { drag = true; ba.setPointerCapture(e.pointerId); set(e.clientX); });
+  ba.addEventListener('pointermove', e => drag && set(e.clientX));
+  ba.addEventListener('pointerup', () => drag = false);
+
+  const peopleEl = $('#people'), txt = $('#storyTxt');
+  peopleEl.innerHTML = people.map((p, i) => `<button data-i="${i}" aria-label="${p.n}"><img src="${img(p.f + '_After.png', 140)}" alt=""></button>`).join('');
+  // preload so switching is instant
+  people.forEach(p => { new Image().src = img(p.f + '_Before.png'); new Image().src = img(p.f + '_After.png'); });
+
+  let cur = -1, auto;
+  const show = i => {
+    if (i === cur) return; cur = i;
+    const p = people[i];
+    peopleEl.querySelectorAll('button').forEach((b, j) => b.classList.toggle('on', j === i));
+    txt.classList.add('fade'); ba.classList.add('swap');
+    setTimeout(() => {
+      before.src = img(p.f + '_Before.png'); after.src = img(p.f + '_After.png');
+      $('#sTitle').textContent = p.t; $('#sQuote').textContent = p.q; $('#sName').textContent = p.n;
+      txt.classList.remove('fade'); ba.classList.remove('swap');
+      // little "hint" sweep so people know it's draggable
+      ba.animate([{ '--p': '50%' }, { '--p': '78%' }, { '--p': '22%' }, { '--p': '50%' }], { duration: 1600, easing: 'ease-in-out' });
+    }, 350);
+  };
+  CSS.registerProperty?.({ name: '--p', syntax: '<percentage>', inherits: true, initialValue: '50%' });
+  peopleEl.addEventListener('click', e => { const b = e.target.closest('button'); if (b) { clearInterval(auto); show(+b.dataset.i); } });
+  show(0);
+  auto = setInterval(() => show((cur + 1) % people.length), 7000);
+  ba.addEventListener('pointerdown', () => clearInterval(auto));
+}
+
+/* ---------- programme gallery + plans ---------- */
+{
+  const shots = ['the-acne-supplement-617553_60bd7e05-3a26-4617-9b84-a0d345edc493.jpg', 'the-acne-supplement-651579_a18c733a-c4fe-4026-b613-1ea9275254a3.jpg', 'shopify_product_images_-_clears_skin_-_acne_supplement_2.png', '3-month-bundle-945707_aeeb0fdf-d8c4-44c0-bfe7-7a638f67559f.jpg'];
+  const gal = $('#gal'), th = $('#thumbs');
+  shots.forEach((s, i) => {
+    gal.insertAdjacentHTML('afterbegin', `<img src="${img(s, 1000)}" data-i="${i}" class="${i ? '' : 'on'}" alt="" loading="lazy">`);
+    th.insertAdjacentHTML('beforeend', `<button data-i="${i}" class="${i ? '' : 'on'}"><img src="${img(s, 120)}" alt=""></button>`);
+  });
+  th.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    gal.querySelectorAll('[data-i]').forEach(el => el.classList.toggle('on', el.dataset.i === b.dataset.i));
+  });
+
+  let plan = 'bundle';
+  $('#plans').addEventListener('click', e => {
+    const p = e.target.closest('.plan'); if (!p) return;
+    plan = p.dataset.id;
+    document.querySelectorAll('.plan').forEach(x => x.classList.toggle('on', x === p));
+    $('#planPrice').textContent = money(products[plan].price);
+  });
+  $('#buyPlan').addEventListener('click', () => add(plan));
+}
+
+/* ---------- shop grid ---------- */
+$('#shopGrid').innerHTML = ['supp', 'wash', 'moist', 'patch'].map(id => {
+  const p = products[id];
+  return `<article class="card rv">
+    <div class="media">${p.was ? '<span class="sale">SALE</span>' : ''}<img src="${p.img.replace('width=400', 'width=700')}" alt="${p.name}" loading="lazy"><img class="alt" src="${p.alt}" alt="" loading="lazy"></div>
+    <div class="body"><span class="sub">${p.sub}</span><h4>${p.name}</h4><span class="rev"><span class="stars">★★★★★</span> 4.7</span>
+      <div class="row"><span class="p">${money(p.price)}${p.was ? `<s>${money(p.was)}</s>` : ''}</span><button class="add" data-id="${id}" aria-label="Add ${p.name}">+</button></div></div>
+  </article>`;
+}).join('');
+$('#shopGrid').addEventListener('click', e => {
+  const b = e.target.closest('.add'); if (!b) return;
+  add(b.dataset.id); b.classList.add('done'); b.textContent = '✓';
+  setTimeout(() => { b.classList.remove('done'); b.textContent = '+'; }, 1400);
+});
+
+/* ---------- reviews wall ---------- */
+$('#wall').innerHTML = reviews.map(r => r.photo
+  ? `<div class="rev-card photo rv"><img src="${r.photo}" alt="${r.alt}" loading="lazy"></div>`
+  : `<div class="rev-card rv ${r.c || ''}"><span class="stars">★★★★★</span><h6>${r.t}</h6><p class="${r.q.length > 260 ? 'clamp' : ''}">${r.q}</p>${r.q.length > 260 ? '<button class="more">Read more</button>' : ''}<div class="nm">${r.n}<span>✓ VERIFIED</span></div></div>`
+).join('');
+$('#wall').addEventListener('click', e => {
+  if (!e.target.matches('.more')) return;
+  const p = e.target.previousElementSibling; p.classList.toggle('clamp');
+  e.target.textContent = p.classList.contains('clamp') ? 'Read more' : 'Show less';
+});
+
+/* ---------- cart ---------- */
+const cart = {};
+function money(n) { return '$' + n.toFixed(2); }
+function add(id) {
+  cart[id] = (cart[id] || 0) + 1;
+  render();
+  const c = $('#cartCount'); c.classList.add('bump'); setTimeout(() => c.classList.remove('bump'), 300);
+  toast(`${products[id].name} added to bag`);
+  setTimeout(() => document.body.classList.add('cart-open'), 450);
+}
+function render() {
+  const ids = Object.keys(cart).filter(k => cart[k] > 0);
+  $('#cartCount').textContent = ids.reduce((s, k) => s + cart[k], 0);
+  $('#subtotal').textContent = money(ids.reduce((s, k) => s + cart[k] * products[k].price, 0));
+  $('#gift').innerHTML = cart.bundle ? '🎉 Nice! <b>FREE blemish patches</b> unlocked with your 90-Day Programme.' : '🎁 Add the 90-Day Programme to unlock <b>FREE blemish patches</b>.';
+  $('#lines').innerHTML = ids.length ? ids.map(k => `<div class="line-item"><img src="${products[k].img}" alt=""><div><b>${products[k].name}</b><div class="qty"><button data-k="${k}" data-d="-1">−</button>${cart[k]}<button data-k="${k}" data-d="1">+</button></div></div><b>${money(products[k].price * cart[k])}</b></div>`).join('')
+    : '<p class="empty">Your bag is empty.<br>Clear skin is two capsules away.</p>';
+}
+$('#lines').addEventListener('click', e => { const b = e.target.closest('[data-k]'); if (b) { cart[b.dataset.k] += +b.dataset.d; render(); } });
+$('#openCart').onclick = () => document.body.classList.add('cart-open');
+$('#closeCart').onclick = $('#scrim').onclick = () => document.body.classList.remove('cart-open');
+addEventListener('keydown', e => e.key === 'Escape' && document.body.classList.remove('cart-open'));
+render();
+
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('on'), 2200); }
+$('#newsForm').addEventListener('submit', e => { e.preventDefault(); e.target.reset(); toast('You’re in! Check your inbox for free patches 🎉'); });
+
+/* ---------- reveal + counters ---------- */
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  e.target.classList.add('in'); io.unobserve(e.target);
+  const n = e.target.querySelector('[data-count]');
+  if (n) {
+    const end = +n.dataset.count, dec = +(n.dataset.dec || 0), suf = n.dataset.suffix || '', t0 = performance.now();
+    const step = t => { const k = Math.min(1, (t - t0) / 1600), v = end * (1 - Math.pow(1 - k, 3)); n.textContent = (dec ? v.toFixed(dec) : Math.round(v).toLocaleString()) + suf; k < 1 && requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  }
+}), { threshold: .15 });
+document.querySelectorAll('.rv, .stat').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
